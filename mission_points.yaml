@@ -1,0 +1,60 @@
+HOME:
+  x: -7.392
+  y: -4.865
+  yaw_deg: -2.165
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.018888
+    w: 0.999822
+  tf_time: 1992.97
+PICKUP:
+  x: -6.093
+  y: -0.914
+  yaw_deg: -78.387
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.63194
+    w: 0.775017
+  tf_time: 2029.37
+SHELFA:
+  x: -0.126
+  y: 3.842
+  yaw_deg: -89.628
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.704807
+    w: 0.709399
+  tf_time: 2070.03
+DROPOFF:
+  x: 8.061
+  y: 0.206
+  yaw_deg: 179.188
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.999975
+    w: 0.007089
+  tf_time: 2127.59
+TEST1:
+  x: 5.904
+  y: 0.101
+  yaw_deg: 0.963
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.008402
+    w: 0.999965
+  tf_time: 1822.11
+TEST2:
+  x: 2.092
+  y: 1.873
+  yaw_deg: 98.031
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.754886
+    w: 0.655856
+  tf_time: 1856.63

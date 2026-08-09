@@ -1,0 +1,13 @@
+mission_name: warehouse_inspection
+
+max_retries: 2
+wait_between_retries: 2.0
+
+stations:
+  - name: SHELFA
+    action: inspect
+    wait_after_arrival: 5.0
+
+  - name: HOME
+    action: finish
+    wait_after_arrival: 1.0

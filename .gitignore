@@ -1,0 +1,34 @@
+# ROS 2 / colcon
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ROS runtime
+.ros/
+
+# Mission runtime logs
+mission_logs/
+*.log
+
+# Temporary / backup files
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+nav2_params_STABLE.yaml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

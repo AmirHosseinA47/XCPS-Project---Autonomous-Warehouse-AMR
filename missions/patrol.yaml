@@ -1,0 +1,23 @@
+mission_name: warehouse_patrol
+
+max_retries: 2
+wait_between_retries: 2.0
+
+loops: 3
+
+stations:
+  - name: PICKUP
+    action: none
+    wait_after_arrival: 1.0
+
+  - name: SHELFA
+    action: inspect
+    wait_after_arrival: 2.0
+
+  - name: DROPOFF
+    action: none
+    wait_after_arrival: 1.0
+
+  - name: HOME
+    action: finish
+    wait_after_arrival: 1.0
