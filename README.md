@@ -4,6 +4,32 @@ An autonomous mobile robot (AMR) simulation for warehouse navigation, mission ex
 
 The project combines **ROS 2 Jazzy**, **Gazebo Harmonic**, **Nav2**, **AMCL**, **robot_localization**, a simulated **2D GPU LiDAR**, a mission manager, and an operator dashboard. The robot can autonomously navigate between warehouse stations, execute configurable missions, react to moving obstacles, and be launched as a complete system from a single command.
 
+## Screenshots
+
+### Gazebo Warehouse Simulation
+
+Complete warehouse environment in Gazebo Harmonic with the autonomous mobile robot and moving warehouse worker.
+
+![Gazebo Warehouse Simulation](docs/images/gazebo-overview.png)
+
+### RViz / Nav2
+
+RViz visualization showing the warehouse map, localized robot, LiDAR data, costmaps, and Nav2 navigation.
+
+![RViz Nav2](docs/images/rviz-nav2.png)
+
+### Mission Control Dashboard
+
+Custom operator dashboard for mission selection, execution control, progress monitoring, event logging, and Nav2 health monitoring.
+
+![Mission Dashboard](docs/images/dashboard.png)
+
+### Warehouse Robot
+
+Close-up view of the simulated differential-drive AMR.
+
+![Warehouse Robot](docs/images/robot-closeup.png)
+
 ## Highlights
 
 - Differential-drive warehouse robot
@@ -51,6 +77,7 @@ flowchart LR
 
     ROBOT --> LIDAR
     WORKER -. detected by .-> LIDAR
+
     LIDAR --> BRIDGE
     BRIDGE -->|/scan| AMCL
     BRIDGE -->|/scan| GC
@@ -59,6 +86,7 @@ flowchart LR
 
     MAP --> AMCL
     MAP --> GC
+
     EKF -->|odom → base_link| AMCL
     AMCL -->|map → odom| BT
 
@@ -69,9 +97,11 @@ flowchart LR
     BT --> PLANNER
     PLANNER --> GC
     PLANNER -->|global path| RPP
+
     RPP --> LC
     RPP --> VM
     VM --> CM
+
     CM -->|/cmd_vel| BRIDGE
     BRIDGE --> ROBOT
 ```
@@ -101,11 +131,13 @@ The simulated platform is a compact differential-drive mobile robot with:
 | Safety | Nav2 Collision Monitor |
 | Behavior management | Nav2 BT Navigator |
 
-The final RPP + SmacPlanner2D setup is the stable navigation baseline for this project.
+The final **RPP + SmacPlanner2D** setup is the stable navigation baseline for this project.
 
 ## Mission System
 
-Mission definitions are stored in YAML files. A delivery mission follows:
+Mission definitions are stored in YAML files.
+
+Example delivery mission:
 
 ```text
 PICKUP → SHELFA → DROPOFF → HOME
@@ -156,7 +188,7 @@ When the worker intersects the robot's path:
 
 1. LiDAR detects the moving obstacle.
 2. The obstacle is inserted into the costmap.
-3. RPP detects a potential collision.
+3. Regulated Pure Pursuit detects a potential collision.
 4. Collision Monitor reduces or blocks motion when required.
 5. The robot continues once the path becomes safe.
 
@@ -165,7 +197,14 @@ When the worker intersects the robot's path:
 ```text
 warehouse_ws/
 ├── README.md
+├── ARCHITECTURE.md
 ├── .gitignore
+├── docs/
+│   └── images/
+│       ├── dashboard.png
+│       ├── gazebo-overview.png
+│       ├── robot-closeup.png
+│       └── rviz-nav2.png
 ├── maps/
 │   ├── warehouse_map.pgm
 │   └── warehouse_map.yaml
@@ -244,20 +283,25 @@ sudo apt install \
 
 ```bash
 cd ~/warehouse_ws
+
 source /opt/ros/jazzy/setup.bash
+
 colcon build --symlink-install
-source install/setup.bash
+
+source ~/warehouse_ws/install/setup.bash
 ```
 
 ## Run
 
-### Standard headless simulation
+### Standard Headless Simulation
 
 ```bash
 source /opt/ros/jazzy/setup.bash
 source ~/warehouse_ws/install/setup.bash
 
-ros2 launch warehouse_robot_description warehouse_system.launch.py
+ros2 launch \
+  warehouse_robot_description \
+  warehouse_system.launch.py
 ```
 
 ### Gazebo GUI
@@ -267,18 +311,20 @@ source /opt/ros/jazzy/setup.bash
 source ~/warehouse_ws/install/setup.bash
 
 QT_QPA_PLATFORM=xcb ros2 launch \
-  warehouse_robot_description warehouse_system.launch.py \
+  warehouse_robot_description \
+  warehouse_system.launch.py \
   headless:=False
 ```
 
-### Gazebo GUI + moving warehouse worker
+### Gazebo GUI + Moving Warehouse Worker
 
 ```bash
 source /opt/ros/jazzy/setup.bash
 source ~/warehouse_ws/install/setup.bash
 
 QT_QPA_PLATFORM=xcb ros2 launch \
-  warehouse_robot_description warehouse_system.launch.py \
+  warehouse_robot_description \
+  warehouse_system.launch.py \
   headless:=False \
   dynamic_obstacle:=True
 ```
@@ -289,7 +335,10 @@ QT_QPA_PLATFORM=xcb ros2 launch \
 source /opt/ros/jazzy/setup.bash
 source ~/warehouse_ws/install/setup.bash
 
-ros2 run warehouse_robot_missions warehouse_mission delivery
+ros2 run \
+  warehouse_robot_missions \
+  warehouse_mission \
+  delivery
 ```
 
 ## Validation
@@ -300,14 +349,16 @@ The system has been tested with:
 - Repeated autonomous navigation
 - Automatic AMCL initialization
 - SmacPlanner2D path generation
-- RPP path tracking
-- Dynamic human-crossing scenario
-- Collision prediction / monitoring
+- Regulated Pure Pursuit path tracking
+- Dynamic warehouse-worker crossing scenario
+- Collision prediction and monitoring
 - Mission pause, resume, cancel, and retry behavior
+- Gazebo GUI with robot and moving worker active simultaneously
 
 ## Known Notes
 
 - Gazebo GUI under WSL is heavier than headless mode.
+- The Gazebo GUI launch uses a **10-second robot spawn delay** to allow the simulator additional initialization time under WSL.
 - Headless mode is recommended for repeatable navigation tests.
 - After an interrupted launch, make sure old Gazebo / ROS processes are not still running before starting another simulation.
 - Do not commit generated `build/`, `install/`, `log/`, Python cache, or mission log files.
@@ -316,11 +367,11 @@ The system has been tested with:
 
 This repository intentionally remains focused on a single autonomous warehouse AMR.
 
-Future work is better suited to a second project:
+Future extensions may include:
 
 - Camera perception
 - YOLO object detection
-- Jetson integration
+- NVIDIA Jetson integration
 - Autonomous visual inspection
 - Multi-robot fleet management
 - Automatic docking / charging
@@ -334,4 +385,4 @@ Core navigation, localization, mission control, operator interface, dynamic-obst
 
 ---
 
-Built as a robotics learning and portfolio project using ROS 2, Gazebo, and Nav2.
+Built as a robotics learning and portfolio project using **ROS 2, Gazebo, and Nav2**.
